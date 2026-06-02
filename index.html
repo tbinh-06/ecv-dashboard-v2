@@ -632,6 +632,7 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
   function renderOv(){
     const th=document.getElementById('ov_th'),tb=document.getElementById('ov_tb');
     const list=[...proj].sort((a,b)=>b.dt-a.dt);
+    const sDT=R(proj.reduce((s,p)=>s+p.dt,0)),sCP=R(proj.reduce((s,p)=>s+p.cp,0)),sLN=R(sDT-sCP),sPT=R(proj.reduce((s,p)=>s+p.pt,0)),sPTr=R(proj.reduce((s,p)=>s+p.ptr,0)),sNet=R(sPT-sPTr);
     if(otab===1){
       th.innerHTML='<tr><th style="width:26%">Công trình</th><th style="width:14%">Doanh thu NT</th><th style="width:14%">Chi phí</th><th style="width:14%">Lợi nhuận</th><th style="text-align:center;width:32%">Lợi nhuận / tháng</th></tr>';
       tb.innerHTML=list.map(p=>{const ln=R(p.dt-p.cp),khc=pc(p.dt,p.dtkh),nsc=pc(p.cp,p.ns),mg=Math.round(ln/p.dt*100);
@@ -639,14 +640,14 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
           +'<td><div class="mono">'+p.dt+'</div><div class="s2">'+khc+'% KH</div></td>'
           +'<td><div class="mono" style="color:var(--color-text-secondary)">'+p.cp+'</div><div class="s2" style="color:'+(nsc>100?RD:'var(--color-text-tertiary)')+'">'+nsc+'% NS</div></td>'
           +'<td><div class="mono" style="color:'+(ln<0?RD:'')+'">'+ln+'</div><div class="s2">biên '+mg+'%</div></td>'
-          +'<td style="text-align:center">'+spark(p.lnm,lnMax)+'<div class="s2 mono" style="margin-top:3px;color:'+(ln<0?RD:BL)+'">Kỳ '+(ln>=0?'+':'')+ln+' tỷ</div></td></tr>';}).join('');
+          +'<td style="text-align:center">'+spark(p.lnm,lnMax)+'<div class="s2 mono" style="margin-top:3px;color:'+(ln<0?RD:BL)+'">Kỳ '+(ln>=0?'+':'')+ln+' tỷ</div></td></tr>';}).join('')+'<tr class="tot"><td>TỔNG CỘNG</td><td class="mono">'+sDT+'</td><td class="mono">'+sCP+'</td><td class="mono" style="color:'+(sLN<0?RD:'')+'">'+sLN+'</td><td></td></tr>';
     }else{
       th.innerHTML='<tr><th style="width:26%">Công trình</th><th style="width:14%">Phải thu còn</th><th style="width:14%">Phải trả còn</th><th style="width:14%">Net công nợ</th><th style="text-align:center;width:32%">Dòng tiền / tháng</th></tr>';
       tb.innerHTML=list.map(p=>{const ncn=R(p.pt-p.ptr);
         return '<tr>'+nameCell(p)
           +'<td class="mono">'+p.pt+'</td><td class="mono" style="color:var(--color-text-secondary)">'+p.ptr+'</td>'
           +'<td class="mono" style="color:'+(ncn<0?RD:'')+'">'+(ncn>=0?'+':'')+ncn+'</td>'
-          +'<td style="text-align:center">'+spark(p.cfm,cfMax)+'<div class="s2 mono" style="margin-top:3px;color:'+(p.cf<0?RD:BL)+'">Thuần '+(p.cf>=0?'+':'')+R(p.cf)+' tỷ</div></td></tr>';}).join('');
+          +'<td style="text-align:center">'+spark(p.cfm,cfMax)+'<div class="s2 mono" style="margin-top:3px;color:'+(p.cf<0?RD:BL)+'">Thuần '+(p.cf>=0?'+':'')+R(p.cf)+' tỷ</div></td></tr>';}).join('')+'<tr class="tot"><td>TỔNG CỘNG</td><td class="mono">'+sPT+'</td><td class="mono">'+sPTr+'</td><td class="mono" style="color:'+(sNet<0?RD:'')+'">'+(sNet>=0?'+':'')+sNet+'</td><td></td></tr>';
     }
     document.querySelectorAll('.ovtab').forEach(b=>b.classList.toggle('on',+b.dataset.t===otab));
   }
@@ -894,7 +895,7 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
     el('cp_hmb').innerHTML=dept.map((d,di)=>'<tr><td class="dname">'+d.n+'</td>'+LO.map((l,li)=>{
       const v=HV[di][li],over=overSet.has(di+'-'+li),limF=over?0.89:1.13,pctHm=Math.round(100/limF);
       const bg=blueA(0.08+0.5*(v/maxHV)),txt=mode==='val'?nf(v):pctHm+'%';
-      return '<td><div class="hcell'+(over?' over':'')+'" style="background:'+bg+'">'+txt+'</div></td>';}).join('')+'</tr>').join('');
+      return '<td><div class="hcell'+(over?' over':'')+'" style="background:'+bg+'">'+txt+'</div></td>';}).join('')+'</tr>').join('')+'<tr><td class="dname" style="font-weight:700;background:var(--color-background-secondary)">TỔNG CỘNG</td>'+LO.map(l=>'<td><div class="hcell" style="background:var(--color-background-secondary);font-weight:600">'+(mode==='val'?nf(l.th):pc(l.th,l.kh)+'%')+'</div></td>').join('')+'</tr>';
   }
   const moExp=new Set();
   function renderMonO(){let h='';
@@ -1063,6 +1064,8 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
           +'<td class="mono s2" style="color:var(--color-text-tertiary)">'+nsH+'</td>'
           +'<td class="mono s2" style="color:'+(chH>0?RD:'var(--color-text-success)')+'">'+(chH>0?'+':'')+chH+'</td><td></td></tr>';});}
     });
+    const sChi=R(RR.reduce((s,p)=>s+p.chi,0)),sF=R(RR.reduce((s,p)=>s+p.chi/(p.td/100),0)),sNS=R(RR.reduce((s,p)=>s+p.ns,0)),sCh=R(sF-sNS),sPv=Math.round(sF/sNS*100);
+    h+='<tr class="tot"><td style="text-align:left">TỔNG CỘNG</td><td class="mono">'+sChi+'</td><td></td><td class="mono" style="color:'+(sF>sNS?RD:'var(--color-text-info)')+'">'+sF+'</td><td class="mono">'+sNS+'</td><td class="mono" style="color:'+(sCh>0?RD:'var(--color-text-success)')+'">'+(sCh>0?'+':'')+sCh+' ('+sPv+'%)</td><td></td></tr>';
     el('cp_rrb').innerHTML=h;
     document.querySelectorAll('.rrrow').forEach(r=>r.addEventListener('click',function(){const i=+r.dataset.i;if(rrExp.has(i))rrExp.delete(i);else rrExp.add(i);renderRR();}));
   }
@@ -1149,6 +1152,8 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
         const ct=R(MON.reduce((s,_,i)=>s+cv(p.thu*hm.f,p.chi*hm.f,i),0));
         h+='<tr style="display:'+(open?'':'none')+'"><td style="padding:5px 8px 5px 26px;color:var(--color-text-secondary);font-size:10.5px">└ '+hm.n+'</td>'+cc+'<td class="ccell" style="font-weight:500">'+fc2(ct)+'</td></tr>';});
     });
+    const tmon=MON.map((_,i)=>R(cproj.reduce((s,p)=>s+cv(p.thu,p.chi,i),0)));const tall=R(tmon.reduce((a,b)=>a+b,0));
+    h+='<tr><td class="dname" style="font-weight:700;background:var(--color-background-secondary)">TỔNG CỘNG</td>'+tmon.map(v=>'<td><div class="hcell" style="background:var(--color-background-secondary);font-weight:600;color:'+(v<0?RD:'var(--color-text-primary)')+'">'+fc2(v)+'</div></td>').join('')+'<td><div class="hcell" style="background:var(--color-background-secondary);font-weight:700;color:'+(tall<0?RD:'var(--color-text-info)')+'">'+fc2(tall)+'</div></td></tr>';
     el('cn_hmb').innerHTML=h;
     el('cn_hmleg').innerHTML=dtMode==='net'?'<span><span class="dot" style="background:#E24B4A"></span>Âm</span><span style="color:var(--color-text-tertiary)">← 0 →</span><span><span class="dot" style="background:#2E7CD6"></span>Dương</span>':dtMode==='thu'?'<span><span class="dot" style="background:#2E7CD6"></span>Tiền thu — đậm hơn = thu nhiều</span>':'<span><span class="dot" style="background:#E24B4A"></span>Tiền chi — đậm hơn = chi nhiều</span>';
     el('cn_hmb').querySelectorAll('.prow').forEach(r=>r.addEventListener('click',function(){const pi=+r.dataset.pi;if(dtExp.has(pi))dtExp.delete(pi);else dtExp.add(pi);renderDtHM();}));
@@ -1166,7 +1171,7 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
     q('.cnpty').forEach(b=>b.classList.toggle('on',b.dataset.p===ptyMode));}
 
   const PLAN=[{k:1,n:'Nghiệm thu đợt 3',o:'Ban QLDA Mỹ Thuận',d:'18/06',a:6.5},{k:0,n:'Lương tháng 6',o:'Nội bộ',d:'05/06',a:5.5},{k:0,n:'Thanh toán thép Q2',o:'Thép Hòa Phát',d:'15/06',a:3.2},{k:1,n:'Thu nợ Cầu TT2',o:'UBND TP. Thủ Đức',d:'22/06',a:3.8},{k:1,n:'Bán đá nhà máy',o:'Khách lẻ',d:'25/06',a:4.2},{k:0,n:'Thuê thiết bị T6',o:'Cho thuê Phú Thái',d:'20/06',a:2.4},{k:0,n:'Thầu phụ cơ điện',o:'Cơ điện Sài Gòn',d:'28/06',a:1.4}];
-  function renderPlan(){el('cn_planb').innerHTML=[...PLAN].sort((a,b)=>a.d.localeCompare(b.d)).map(p=>'<tr><td style="text-align:left">'+(p.k?'<span class="tg" style="background:var(--color-background-info);color:var(--color-text-info)">Thu</span>':'<span class="tg" style="background:var(--color-background-danger);color:var(--color-text-danger)">Chi</span>')+'</td><td style="text-align:left;font-weight:500">'+p.n+'</td><td style="text-align:left;color:var(--color-text-secondary)">'+p.o+'</td><td class="s2">'+p.d+'</td><td class="mono" style="color:'+(p.k?'var(--color-text-success)':'var(--color-text-danger)')+';font-weight:500">'+(p.k?'+':'-')+p.a+'</td></tr>').join('');}
+  function renderPlan(){const sThu=R(PLAN.filter(p=>p.k).reduce((s,p)=>s+p.a,0)),sChi=R(PLAN.filter(p=>!p.k).reduce((s,p)=>s+p.a,0)),sNet=R(sThu-sChi);el('cn_planb').innerHTML=[...PLAN].sort((a,b)=>a.d.localeCompare(b.d)).map(p=>'<tr><td style="text-align:left">'+(p.k?'<span class="tg" style="background:var(--color-background-info);color:var(--color-text-info)">Thu</span>':'<span class="tg" style="background:var(--color-background-danger);color:var(--color-text-danger)">Chi</span>')+'</td><td style="text-align:left;font-weight:500">'+p.n+'</td><td style="text-align:left;color:var(--color-text-secondary)">'+p.o+'</td><td class="s2">'+p.d+'</td><td class="mono" style="color:'+(p.k?'var(--color-text-success)':'var(--color-text-danger)')+';font-weight:500">'+(p.k?'+':'-')+p.a+'</td></tr>').join('')+'<tr class="tot"><td style="text-align:left">Tổng</td><td colspan="2" style="text-align:left" class="s2">Thu +'+sThu+' tỷ · Chi -'+sChi+' tỷ</td><td class="s2" style="text-align:left">Ròng</td><td class="mono" style="color:'+(sNet>=0?'var(--color-text-success)':'var(--color-text-danger)')+'">'+(sNet>=0?'+':'')+sNet+'</td></tr>';}
 
   const JTHU=[{d:'24/05',ct:'PT-0512',dg:'Thu nghiệm thu đợt 2',o:'Ban QLDA Mỹ Thuận',p:'Cao tốc BL-LT',a:5200,f:'CK'},{d:'22/05',ct:'PT-0511',dg:'Thu tiền bán đá 1×2',o:'Khách lẻ nhà máy',p:'Nhà máy KS',a:1850,f:'CK'},{d:'20/05',ct:'PT-0510',dg:'Thu hồ sơ nghiệm thu T05',o:'UBND TP. Thủ Đức',p:'Cầu Thủ Thiêm 2',a:3600,f:'CK'},{d:'18/05',ct:'PT-0509',dg:'Thu tạm ứng hợp đồng',o:'CĐT Đại Quang Minh',p:'KĐT Sala',a:2400,f:'CK'},{d:'15/05',ct:'PT-0508',dg:'Thu tiền bán đá base',o:'Khách lẻ nhà máy',p:'Nhà máy KS',a:980,f:'TM'},{d:'12/05',ct:'PT-0507',dg:'Thu công nợ kỳ trước',o:'TCT Becamex IDC',p:'KCN Becamex',a:1500,f:'CK'},{d:'08/05',ct:'PT-0506',dg:'Thu nghiệm thu đợt 1',o:'BQL Cảng Long An',p:'Cảng Long An',a:1200,f:'CK'},{d:'05/05',ct:'PT-0505',dg:'Thu tiền bán đá mi',o:'Khách lẻ nhà máy',p:'Nhà máy KS',a:760,f:'TM'}];
   const JCHI=[{d:'23/05',ct:'PC-0820',dg:'Thanh toán thép xây dựng',o:'Thép Hòa Phát',p:'Cao tốc BL-LT',a:2400,f:'CK'},{d:'21/05',ct:'PC-0819',dg:'Chi lương tháng 5',o:'Nội bộ — bảng lương',p:'Toàn công ty',a:5200,f:'CK'},{d:'19/05',ct:'PC-0818',dg:'Thuê máy đào tháng 5',o:'Cho thuê Phú Thái',p:'Đường vành đai 3',a:850,f:'CK'},{d:'16/05',ct:'PC-0817',dg:'Mua xi măng',o:'Xi măng Hà Tiên',p:'KĐT Sala',a:1100,f:'CK'},{d:'14/05',ct:'PC-0816',dg:'Thanh toán thầu phụ cơ điện',o:'Cơ điện Sài Gòn',p:'Nhà máy VSIP',a:700,f:'CK'},{d:'10/05',ct:'PC-0815',dg:'Chi nhiên liệu xe máy',o:'Petrolimex',p:'Cảng Long An',a:420,f:'TM'},{d:'07/05',ct:'PC-0814',dg:'Chi phí văn phòng T5',o:'Nhiều NCC',p:'Văn phòng',a:310,f:'TM'},{d:'03/05',ct:'PC-0813',dg:'Tạm ứng thi công',o:'Đội thi công số 3',p:'Hầm Thủ Thiêm',a:600,f:'TM'}];
@@ -1208,6 +1213,8 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
         const ct=R(arr.reduce((s,v)=>s+v*hm.f,0));
         h+='<tr style="display:'+(open?'':'none')+'"><td style="padding:5px 8px 5px 26px;color:var(--color-text-secondary);font-size:10.5px">└ '+hm.n+'</td>'+cc+'<td class="ccell" style="font-weight:500">'+ct+'</td></tr>';});
     });
+    const tbk=[0,1,2,3].map(ci=>R(dproj.reduce((s,p)=>s+p[key][ci],0)));const tall=R(tbk.reduce((a,b)=>a+b,0));
+    h+='<tr><td class="dname" style="font-weight:700;background:var(--color-background-secondary)">TỔNG CỘNG</td>'+tbk.map((v,ci)=>'<td><div class="hcell" style="background:'+(v>0?aColor(ci,0.5):'var(--color-background-secondary)')+';color:#fff;font-weight:600">'+(v>0?R(v):'–')+'</div></td>').join('')+'<td><div class="hcell" style="background:var(--color-background-secondary);font-weight:700;color:var(--color-text-info)">'+tall+'</div></td></tr>';
     el('cn_cnhmb').innerHTML=h;
     el('cn_cnhmleg').innerHTML=BK.map((b,i)=>'<span><span class="dot" style="background:'+AG[i]+'"></span>'+b+'</span>').join('')+'<span style="color:var(--color-text-tertiary)">· đậm hơn = dư nợ lớn</span>';
     el('cn_cnhmTitle').innerHTML='<i class="ti ti-layout-grid"></i> Công nợ '+(agMode==='pt'?'phải thu':'phải trả')+' theo công trình × tuổi nợ';
