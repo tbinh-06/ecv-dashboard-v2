@@ -48,7 +48,10 @@ body{background:#F4F6FA;color:var(--color-text-primary);font-family:'Inter',-app
 .main{flex:1;padding:22px 26px;max-width:1500px;min-width:0}
 .page{display:none}
 
-.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:13px 15px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:13px 15px;position:relative}
+.kpi .chg{position:absolute;top:11px;right:12px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:3px;line-height:1.45}
+.kpi .chg.u{color:var(--color-text-success);background:var(--color-background-success)}
+.kpi .chg.d{color:var(--color-text-danger);background:var(--color-background-danger)}
 .kpi .ttl{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.4px}
 .kpi .big{font-size:23px;font-weight:500;margin:5px 0 9px}
 .kpi .row{display:flex;align-items:center;gap:8px;font-size:11.5px;padding:3px 0}
@@ -81,6 +84,8 @@ table.tk th:not(:first-child),table.tk td:not(:first-child){text-align:center}
 .warn{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-warning);border:0.5px solid #E0AA4E;border-radius:var(--border-radius-lg);padding:12px 15px;margin-bottom:14px;font-size:12.5px;color:#7a5212}
 .warn b{color:#5e3f0c}
 table.hm{width:100%;border-collapse:separate;border-spacing:3px;font-size:10.5px;min-width:840px}
+table.hm.hmfix{table-layout:fixed}
+table.hm.hmfix td,table.hm.hmfix th{overflow:hidden;text-overflow:ellipsis}
 table.hm th{font-weight:500;color:var(--color-text-secondary);font-size:10px;padding:3px;text-align:center}
 table.hm th:first-child,table.hm td:first-child{text-align:left}
 .hcell{border-radius:7px;padding:8px 2px;text-align:center;font-variant-numeric:tabular-nums;font-weight:500;color:var(--color-text-primary)}
@@ -159,11 +164,6 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
       <div class="kpi"><div class="ttl">Công nợ còn lại</div><div class="big" style="color:var(--color-text-info)">+18.4 tỷ</div>
         <div class="row"><span class="l">Phải thu còn</span><span class="v">31.2 tỷ</span></div>
         <div class="row"><span class="l">Phải trả còn</span><span class="v">12.8 tỷ</span></div></div>
-      <div class="kpi"><div class="ttl">Công trình cảnh báo</div><div class="big dn">5 công trình</div>
-        <div class="row"><span class="l">Vượt ngân sách</span><span class="v">2</span></div>
-        <div class="row"><span class="l">Chậm nghiệm thu</span><span class="v">2</span></div>
-        <div class="row"><span class="l">Âm dòng tiền</span><span class="v">2</span></div>
-        <div class="row"><span class="l">Biên LN thấp</span><span class="v">2</span></div></div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px;margin-bottom:14px">
@@ -211,24 +211,15 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
 
     <div id="rv_ct">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px">
-        <div class="kpi"><div class="ttl">Doanh thu nghiệm thu</div><div class="big" style="color:var(--color-text-info)">74.8 tỷ</div>
-          <div class="row"><span class="l">So kỳ trước</span><span class="v up">↑ 18%</span></div>
-          <div class="row"><span class="l">Nghiệm thu T05</span><span class="v">16.8 tỷ</span></div></div>
-        <div class="kpi"><div class="ttl">Giá trị chờ nghiệm thu</div><div class="big" style="color:var(--color-text-warning)">31.6 tỷ</div>
-          <div class="row"><span class="l">Đã thi công, chưa NT</span><span class="v"></span></div>
-          <div class="row"><span class="l">Công trình lệch lớn</span><span class="v">3</span><span class="bdg bM">Theo dõi</span></div></div>
-        <div class="kpi"><div class="ttl">Tỉ lệ nghiệm thu / hợp đồng</div><div class="big" style="color:var(--color-text-info)">39%</div>
-          <div class="row"><span class="l">Đã nghiệm thu</span><span class="v">74.8 tỷ</span></div>
-          <div class="row"><span class="l">Tổng giá trị HĐ</span><span class="v">191 tỷ</span></div></div>
+        <div class="kpi"><div class="chg u">↑ 18%</div><div class="ttl">Doanh thu nghiệm thu</div><div class="big" style="color:var(--color-text-info)">74.8 tỷ</div>
+          <div class="row"><span class="l">% Nghiệm thu / Hợp đồng</span><span class="v">39%</span></div>
+          <div class="row"><span class="l">% Nghiệm thu / Kế hoạch</span><span class="v">82%</span></div></div>
+        <div class="kpi"><div class="chg u">↑ 7%</div><div class="ttl">Giá trị chờ nghiệm thu</div><div class="big" style="color:var(--color-text-warning)">31.6 tỷ</div>
+          <div class="row"><span class="l">% Nghiệm thu / Hợp đồng</span><span class="v">39%</span></div>
+          <div class="row"><span class="l">% Nghiệm thu / Kế hoạch</span><span class="v">82%</span></div></div>
         <div class="kpi"><div class="ttl">Kế hoạch</div><div class="big" style="color:var(--color-text-info)">91.2 tỷ</div>
           <div class="row"><span class="l">KH lũy kế đến T05</span><span class="v">91.2 tỷ</span></div>
           <div class="row"><span class="l">KH cả năm</span><span class="v">220 tỷ</span></div></div>
-        <div class="kpi"><div class="ttl">Nghiệm thu / kế hoạch</div><div class="big" style="color:var(--color-text-info)">82%</div>
-          <div class="row"><span class="l">Đã nghiệm thu</span><span class="v">74.8 tỷ</span></div>
-          <div class="row"><span class="l">KH lũy kế</span><span class="v">91.2 tỷ</span><span class="bdg bM">Theo dõi</span></div></div>
-        <div class="kpi"><div class="ttl">Giá trị HĐ còn lại</div><div class="big" style="color:var(--color-text-info)">116.5 tỷ</div>
-          <div class="row"><span class="l">Backlog chưa thực hiện</span><span class="v"></span></div>
-          <div class="row"><span class="l">Số công trình đang chạy</span><span class="v">9</span></div></div>
       </div>
 
       <div class="card" style="margin-bottom:14px">
@@ -259,24 +250,15 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
 
     <div id="rv_nm" style="display:none">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px">
-        <div class="kpi"><div class="ttl">Doanh thu nhà máy</div><div class="big" style="color:var(--color-text-info)">27.9 tỷ</div>
-          <div class="row"><span class="l">So kỳ trước</span><span class="v up">↑ 12%</span></div>
-          <div class="row"><span class="l">Đạt kế hoạch</span><span class="v">96%</span><span class="bdg bG">Tốt</span></div></div>
-        <div class="kpi"><div class="ttl">Sản lượng tiêu thụ</div><div class="big" style="color:var(--color-text-info)">272 ngh.tấn</div>
-          <div class="row"><span class="l">Tháng T05 so T04</span><span class="v dn">↓ 8%</span><span class="bdg bM">Theo dõi</span></div>
-          <div class="row"><span class="l">Giảm nhiều nhất</span><span class="v">Đá base</span></div></div>
-        <div class="kpi"><div class="ttl">Giá bán bình quân</div><div class="big" style="color:var(--color-text-info)">103 k/tấn</div>
-          <div class="row"><span class="l">So kỳ trước</span><span class="v up">↑ 3%</span></div>
+        <div class="kpi"><div class="chg u">↑ 12%</div><div class="ttl">Doanh thu nhà máy</div><div class="big" style="color:var(--color-text-info)">27.9 tỷ</div>
+          <div class="row"><span class="l">% Doanh thu / Kế hoạch</span><span class="v">96%</span></div></div>
+        <div class="kpi"><div class="chg d">↓ 8%</div><div class="ttl">Sản lượng tiêu thụ</div><div class="big" style="color:var(--color-text-info)">272 ngh.tấn</div>
+          <div class="row"><span class="l">% Sản lượng / Kế hoạch</span><span class="v">94%</span></div></div>
+        <div class="kpi"><div class="chg u">↑ 3%</div><div class="ttl">Giá bán bình quân</div><div class="big" style="color:var(--color-text-info)">103 k/tấn</div>
           <div class="row"><span class="l">SP giá giảm</span><span class="v">2</span></div></div>
-        <div class="kpi"><div class="ttl">Tồn kho thành phẩm</div><div class="big" style="color:var(--color-text-info)">5.0 tỷ</div>
-          <div class="row"><span class="l">Vòng quay</span><span class="v">~5.6 lần</span></div>
-          <div class="row"><span class="l">SP tồn cao</span><span class="v">1</span><span class="bdg bM">Theo dõi</span></div></div>
-        <div class="kpi"><div class="ttl">Biên lợi nhuận</div><div class="big" style="color:var(--color-text-info)">22%</div>
-          <div class="row"><span class="l">Lợi nhuận</span><span class="v">~6.1 tỷ</span></div>
-          <div class="row"><span class="l">SP margin giảm</span><span class="v">3</span><span class="bdg bM">Theo dõi</span></div></div>
-        <div class="kpi"><div class="ttl">Sản phẩm chủ lực</div><div class="big" style="color:var(--color-text-info)">Đá 1×2</div>
-          <div class="row"><span class="l">Tỷ trọng DT</span><span class="v">42%</span></div>
-          <div class="row"><span class="l">Đạt KH</span><span class="v">98%</span></div></div>
+        <div class="kpi"><div class="ttl">Tồn kho thành phẩm</div><div class="big" style="color:var(--color-text-info)">5.0 tỷ</div></div>
+        <div class="kpi"><div class="ttl">Lợi nhuận</div><div class="big" style="color:var(--color-text-info)">6.1 tỷ</div>
+          <div class="row"><span class="l">Biên lợi nhuận</span><span class="v">22%</span></div></div>
       </div>
 
       <div class="card" style="margin-bottom:14px">
@@ -301,7 +283,7 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
       </div>
       <div class="card">
         <div class="hd" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span><i class="ti ti-table"></i> Theo dõi sản phẩm</span>
-          <div style="display:flex;gap:6px"><button class="tab rvntab on" data-w="gt">Giá trị</button><button class="tab rvntab" data-w="kh">So với KH</button><button class="tab rvntab" data-w="prev">So với kỳ trước</button></div></div>
+          <div style="display:flex;gap:6px"><button class="tab rvntab on" data-w="kh">So với KH</button><button class="tab rvntab" data-w="prev">So với kỳ trước</button></div></div>
         <div style="max-height:340px;overflow:auto"><table class="rk" style="min-width:640px;table-layout:fixed"><thead id="rv_nmth"></thead><tbody id="rv_nmtb"></tbody></table></div>
       </div>
     </div>
@@ -322,22 +304,21 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
       <div class="kpi"><div class="ttl">Chi phí vượt ngân sách</div><div class="big dn">0.8 tỷ</div></div>
     </div>
 
-    <div class="card" style="margin-bottom:14px">
-      <div class="hd" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span><i class="ti ti-chart-bar"></i> Chi phí theo tháng — theo mảng</span>
-        <div style="display:flex;gap:6px"><button class="tab cum on" data-c="cp_seg" data-v="month">Theo tháng</button><button class="tab cum" data-c="cp_seg" data-v="cumu">Lũy kế</button></div></div>
-      <div class="legend"><span><span class="dot" style="background:#0C447C"></span>Công trình</span><span><span class="dot" style="background:#2E7CD6"></span>Nhà máy</span><span><span class="dot" style="background:#8FBEEC"></span>Văn phòng</span><span><span class="dash" style="border-color:#5F5E5A"></span>Ngân sách</span></div>
-      <div style="position:relative;width:100%;height:240px"><canvas id="cp_seg"></canvas></div>
-    </div>
-
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:18px">
       <div class="card">
+        <div class="hd" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span><i class="ti ti-chart-bar"></i> Chi phí theo tháng — theo mảng</span>
+          <div style="display:flex;gap:6px"><button class="tab cum on" data-c="cp_seg" data-v="month">Theo tháng</button><button class="tab cum" data-c="cp_seg" data-v="cumu">Lũy kế</button></div></div>
+        <div class="legend"><span><span class="dot" style="background:#0C447C"></span>Công trình</span><span><span class="dot" style="background:#2E7CD6"></span>Nhà máy</span><span><span class="dot" style="background:#8FBEEC"></span>Văn phòng</span><span><span class="dash" style="border-color:#5F5E5A"></span>Ngân sách</span></div>
+        <div style="position:relative;width:100%;height:215px"><canvas id="cp_seg"></canvas></div>
+      </div>
+      <div class="card">
         <div class="hd"><i class="ti ti-chart-pie"></i> Cơ cấu chi phí theo mảng</div>
-        <div style="display:flex;align-items:center;gap:14px"><div style="position:relative;width:150px;height:150px;flex-shrink:0"><canvas id="cp_dn"></canvas></div><div id="cp_dnlg" style="flex:1;font-size:11.5px"></div></div>
+        <div style="display:flex;align-items:center;gap:14px;height:215px"><div style="position:relative;width:150px;height:150px;flex-shrink:0"><canvas id="cp_dn"></canvas></div><div id="cp_dnlg" style="flex:1;font-size:11.5px"></div></div>
       </div>
       <div class="card">
         <div class="hd"><i class="ti ti-gauge"></i> Thực tế vs ngân sách theo mảng</div>
         <div class="legend"><span><span class="dot" style="background:#2E7CD6"></span>Thực tế</span><span><span class="dot" style="background:#E24B4A"></span>Vượt NS</span><span><span class="dot" style="background:#BBD7F6"></span>Ngân sách</span></div>
-        <div style="position:relative;width:100%;height:170px"><canvas id="cp_nsbar"></canvas></div>
+        <div style="position:relative;width:100%;height:185px"><canvas id="cp_nsbar"></canvas></div>
       </div>
     </div>
 
@@ -355,8 +336,6 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
         <div class="kpi"><div class="ttl">% Ngân sách</div><div class="big up">87,7%</div><div class="row"><span class="l">Trạng thái</span><span class="v">Trong ngưỡng</span><span class="bdg bG">Tốt</span></div></div>
         <div class="kpi"><div class="ttl">Danh mục vượt NS</div><div class="big dn">3 mục</div><div class="row"><span class="l">Cần rà soát</span><span class="v"></span></div></div>
       </div>
-      <div class="warn"><i class="ti ti-alert-triangle" style="font-size:18px;flex-shrink:0;color:#c47f1a"></i>
-        <div><b>Lưu ý: 3 danh mục vượt ngân sách</b> — Chi phí điện (+12,2%), Văn phòng phẩm &amp; mực in (+14,5%), Chi phí tiếp khách (+17,6%). Đề xuất rà soát chi tiêu các khoản này.</div></div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-bottom:14px">
         <div class="card">
@@ -373,11 +352,11 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
       </div>
 
       <div class="card" style="margin-bottom:14px">
-        <div class="hd" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span><i class="ti ti-layout-grid"></i> Chi phí theo phòng ban <span class="s2" style="font-weight:400">· tab Theo tháng: bấm phòng ban để xem hạng mục con</span></span>
-          <div style="display:flex;gap:6px"><button class="tab cphm on" data-m="val">Tổng chi phí</button><button class="tab cphm" data-m="lim">% Ngân sách</button><button class="tab cphm" data-m="month">Theo tháng</button></div></div>
+        <div class="hd" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span><i class="ti ti-layout-grid"></i> Chi phí theo phòng ban <span class="s2" style="font-weight:400">· tab Hạng mục: bấm phòng ban để xem hạng mục con</span></span>
+          <div style="display:flex;gap:6px"><button class="tab cphm on" data-m="val">Tổng chi phí</button><button class="tab cphm" data-m="lim">% Ngân sách</button><button class="tab cphm" data-m="month">Hạng mục</button></div></div>
         <div class="legend" id="cp_hmleg"><span>Ít</span><span style="width:80px;height:10px;border-radius:3px;background:linear-gradient(90deg,rgba(46,124,214,0.12),rgba(46,124,214,0.6))"></span><span>Nhiều</span><span style="margin-left:10px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;outline:1.5px solid #E24B4A;outline-offset:-1.5px"></span> Vượt ngân sách</span></div>
         <div id="cp_hmView" style="overflow-x:auto"><table class="hm"><thead id="cp_hmh"></thead><tbody id="cp_hmb"></tbody></table></div>
-        <div id="cp_monView" style="display:none;overflow-x:auto"><table class="rk" style="min-width:840px"><thead><tr><th style="width:190px;min-width:190px">Phòng ban / Hạng mục</th><th style="width:18%">Thực tế</th><th style="width:14%">Ngân sách</th><th style="text-align:center;width:30%">Theo tháng / Tình trạng</th></tr></thead><tbody id="cp_monb"></tbody></table></div>
+        <div id="cp_monView" style="display:none;overflow-x:auto"><table class="rk" style="min-width:560px"><thead><tr><th style="width:42%;min-width:190px">Phòng ban / Hạng mục</th><th style="width:20%">Thực tế</th><th style="width:18%">Ngân sách</th><th style="text-align:center;width:20%">% NS / Tình trạng</th></tr></thead><tbody id="cp_monb"></tbody></table></div>
       </div>
 
       <div class="card" style="margin-bottom:14px">
@@ -471,8 +450,6 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
           <div class="row"><span class="l">NCC / vật tư</span><span class="v">8.0 tỷ</span></div><div class="row"><span class="l">Lương & khác</span><span class="v">4.0 tỷ</span></div></div>
         <div class="kpi"><div class="ttl">Dòng tiền dự kiến ròng</div><div class="big up">+2.5 tỷ</div>
           <div class="row"><span class="l">Tháng tới (T06)</span><span class="v"></span></div><div class="row"><span class="l">Số dư dự kiến</span><span class="v">39.3 tỷ</span></div></div>
-        <div class="kpi"><div class="ttl">Công trình âm dòng tiền</div><div class="big dn">2 công trình</div>
-          <div class="row"><span class="l">Cảng Long An</span><span class="v dn">-2.3</span></div><div class="row"><span class="l">Hầm Thủ Thiêm</span><span class="v dn">-1.2</span></div></div>
       </div>
 
       <div class="card" style="margin-bottom:14px">
@@ -486,7 +463,7 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
         <div class="hd" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><span><i class="ti ti-layout-grid"></i> Dòng tiền theo công trình × tháng <span class="s2" style="font-weight:400">· bấm dòng để mở hạng mục</span></span>
           <div style="display:flex;gap:6px"><button class="tab cnmd on" data-m="net">Ròng</button><button class="tab cnmd" data-m="thu">Tiền thu</button><button class="tab cnmd" data-m="chi">Tiền chi</button></div></div>
         <div class="legend" id="cn_hmleg"></div>
-        <div style="overflow-x:auto"><table class="hm"><thead id="cn_hmh"></thead><tbody id="cn_hmb"></tbody></table></div>
+        <div style="overflow-x:auto"><table class="hm hmfix"><thead id="cn_hmh"></thead><tbody id="cn_hmb"></tbody></table></div>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-bottom:14px">
@@ -526,15 +503,12 @@ table.mx tr.tot td{border-top:1.5px solid var(--color-border-secondary);font-wei
           <div class="row"><span class="l">61–90 ngày</span><span class="v">4.0 tỷ</span></div><div class="row"><span class="l">&gt; 90 ngày</span><span class="v dn">4.8 tỷ</span></div></div>
         <div class="kpi"><div class="ttl">Số ngày thu BQ (DSO)</div><div class="big" style="color:var(--color-text-info)">58 ngày</div>
           <div class="row"><span class="l">Kỳ trước</span><span class="v">52 ngày</span></div><div class="row"><span class="l">Mục tiêu</span><span class="v">≤ 45 ngày</span><span class="bdg bM">Theo dõi</span></div></div>
-        <div class="kpi"><div class="ttl">Đối tượng nợ quá hạn</div><div class="big dn">3 đối tượng</div>
-          <div class="row"><span class="l">BQL Cảng Long An</span><span class="v dn">2.2</span></div><div class="row"><span class="l">UBND TP. Thủ Đức</span><span class="v dn">2.0</span></div></div>
       </div>
 
       <div style="display:flex;gap:8px;margin-bottom:14px">
         <button class="tab cnag on" data-m="pt">Công nợ phải thu</button>
         <button class="tab cnag" data-m="ptr">Công nợ phải trả</button>
       </div>
-      <div class="s2" style="margin-bottom:14px;display:flex;align-items:flex-start;gap:6px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:9px 12px"><i class="ti ti-info-circle" style="font-size:15px;flex-shrink:0;margin-top:1px;color:var(--color-text-info)"></i><span>Tuổi nợ tính theo số ngày kể từ <b>ngày đến hạn thanh toán</b> ghi trên hóa đơn. Chỉ khoản đã qua ngày đến hạn mới được tính là <b>quá hạn</b> (ECV áp ngưỡng quá hạn <b>&gt; 60 ngày</b>: nhóm 61–90 và &gt; 90). Hóa đơn chưa có ngày đến hạn hoặc chưa tới hạn không tính vào nợ quá hạn.</span></div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:14px">
         <div class="card">
@@ -785,7 +759,7 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
     tb.innerHTML+='<tr class="tot"><td>TỔNG CỘNG</td>'+tDT+tSL+tGia+'<td class="mono">'+sTon+'</td><td class="mono">22%</td></tr>';
   }
   document.querySelectorAll('.rvntab').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.rvntab').forEach(x=>x.classList.toggle('on',x===b));renderNM(b.dataset.w);}));
-  renderNM('gt');
+  renderNM('kh');
 
   let nm1,nm2,nm3,curM='dt',nmInit=false;
   function setNM2(m){curM=m;const isDt=m==='dt';
@@ -856,7 +830,7 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
     const segTot=seg.reduce((s,x)=>s+x.tot,0);
     dnC=new Chart(el('cp_dn'),{type:'doughnut',data:{labels:seg.map(s=>s.n),datasets:[{data:seg.map(s=>s.tot),backgroundColor:seg.map(s=>s.c),borderWidth:0}]},
       options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+ty(c.parsed)+' ('+pc(c.parsed,segTot)+'%)'}}}}});
-    el('cp_dnlg').innerHTML=seg.map(s=>'<div style="display:flex;align-items:center;gap:6px;padding:4px 0"><span class="dot" style="background:'+s.c+'"></span><span>'+s.n+'</span><span class="mono" style="margin-left:auto;color:var(--color-text-secondary)">'+R(s.tot)+' · '+pc(s.tot,segTot)+'%</span></div>').join('');
+    el('cp_dnlg').innerHTML=seg.map(s=>'<div style="display:flex;align-items:center;gap:6px;padding:4px 0"><span class="dot" style="background:'+s.c+'"></span><span>'+s.n+'</span></div>').join('');
     nsC=new Chart(el('cp_nsbar'),{type:'bar',data:{labels:seg.map(s=>s.n),datasets:[
       {label:'Thực tế',data:seg.map(s=>s.tot),backgroundColor:seg.map(s=>s.tot>s.ns?RD:BL),borderRadius:3},
       {label:'Ngân sách',data:seg.map(s=>s.ns),backgroundColor:FAINT,borderRadius:3}]},
@@ -900,7 +874,7 @@ document.addEventListener('click',e=>{const b=e.target.closest?e.target.closest(
   const moExp=new Set();
   function renderMonO(){let h='';
     dept.forEach((d,di)=>{const p=pc(d.th,d.kh),open=moExp.has(di);
-      h+='<tr class="morow" data-i="'+di+'" style="cursor:pointer"><td style="font-weight:500"><span style="color:var(--color-text-tertiary);font-size:10px;margin-right:5px">'+(open?'▾':'▸')+'</span>'+d.n+'</td><td><div class="mono" style="color:var(--color-text-info)">'+nf(d.th)+'</div><div class="s2" style="color:'+(p>100?RD:'var(--color-text-tertiary)')+'">'+p+'% NS</div></td><td class="mono" style="color:var(--color-text-secondary)">'+nf(d.kh)+'</td><td style="text-align:center">'+miniBars(d.m)+'</td></tr>';
+      h+='<tr class="morow" data-i="'+di+'" style="cursor:pointer"><td style="font-weight:500"><span style="color:var(--color-text-tertiary);font-size:10px;margin-right:5px">'+(open?'▾':'▸')+'</span>'+d.n+'</td><td><div class="mono" style="color:var(--color-text-info)">'+nf(d.th)+'</div><div class="s2" style="color:'+(p>100?RD:'var(--color-text-tertiary)')+'">'+p+'% NS</div></td><td class="mono" style="color:var(--color-text-secondary)">'+nf(d.kh)+'</td><td style="text-align:center">'+statO(d.th,d.kh)+'</td></tr>';
       if(open){LO.forEach((l,li)=>{const v=HV[di][li],over=overSet.has(di+'-'+li),pct=over?112:88,ns=R(v/(pct/100));
         h+='<tr style="background:var(--color-background-secondary)"><td style="padding-left:28px;color:var(--color-text-secondary);font-size:11px">└ '+l.n+'</td><td><div class="mono s2" style="color:var(--color-text-secondary)">'+nf(v)+'</div><div class="s2" style="color:'+(over?RD:'var(--color-text-tertiary)')+'">'+pct+'% NS</div></td><td class="mono s2" style="color:var(--color-text-tertiary)">'+nf(ns)+'</td><td style="text-align:center">'+(over?'<span class="tg" style="background:var(--color-background-danger);color:var(--color-text-danger)">Vượt NS</span>':'<span class="tg" style="background:var(--color-background-success);color:var(--color-text-success)">Đạt NS</span>')+'</td></tr>';});}
     });
@@ -1319,4 +1293,4 @@ document.querySelectorAll('#nav button[data-page]').forEach(b=>b.addEventListene
 showPage('overview');
 </script>
 </body>
-</html>
+</html>s
